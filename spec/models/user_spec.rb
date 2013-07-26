@@ -88,4 +88,33 @@ describe User do
       User.authenticate("matt", "bas_password").should be_nil
     end
   end
+
+  describe "avatar_file=" do
+    before do
+      @user = User.create! @valid_attrs
+      @file = File.new('spec/fixtures/hyperdex.png', 'r')
+      @stub = stub_request(:post, "https://api.cloudinary.com/v1_1/banters/image/upload")
+       .to_return(body: {
+        "url" => 'http://res.cloudinary.com/demo/image/upload/v1371281596/sample.jpg',
+        "secure_url" =>
+        'https://cloudinary-a.akamaihd.net/demo/image/upload/v1371281596/sample.jpg',
+          "public_id" => 'sample-public-id',
+          "version" => '1312461204',
+          "format" => 'jpg',
+          "width" => 864,
+          "height" => 564,
+          "bytes" => 120253
+      }.to_json)
+    end
+
+    it "hits the cloudinary API" do
+      @user.avatar_file = @file
+      @stub.should have_been_requested
+    end
+
+    it "sets the avatar_id" do
+      @user.avatar_file = @file
+      @user.avatar_id.should == "sample-public-id.jpg"
+    end
+  end
 end

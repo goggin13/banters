@@ -2,11 +2,13 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'
 gem 'hyper_mapper', path: '/home/ubuntu/HyperMapper'
+gem 'cloudinary'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 group :test, :development do
   gem 'rspec-rails'
+  gem 'webmock'
 end
 
 

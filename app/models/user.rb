@@ -13,6 +13,7 @@ class User
   attribute :username
   attribute :email
   attribute :bio
+  attribute :avatar_id
 
   # Things we'll need for authentication
   attribute :salt
@@ -39,6 +40,11 @@ class User
 
   def has_password?(raw_password)
     hashed_password == encrypt(raw_password)
+  end
+
+  def avatar_file=(io)
+    result = Cloudinary::Uploader.upload(io)
+    self.avatar_id = "#{result['public_id']}.jpg"
   end
 
   def self.authenticate(username, plain_text_password)
